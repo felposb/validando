@@ -1,0 +1,20 @@
+[
+    {
+        "id_historico": 1,
+        "id_empresa": 1,
+        "cpf": "42942842",
+        "resultado": "aprovado",
+        "motivo": "maior de idade",
+        "metodo": "biometria",
+        "data": "31/05/26 00:46:43"
+    },
+    {
+        "id_historico": 2,
+        "id_empresa": 1,
+        "cpf": "42942842",
+        "resultado": "aprovado",
+        "motivo": "maior de idade",
+        "metodo": "biometria",
+        "data": "31/05/26 00:57:34"
+    }
+]
