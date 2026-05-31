@@ -1,0 +1,14 @@
+[
+    {
+        "id_usuario": 1,
+        "nome": "Felipe Gabriel Lima",
+        "cpf": "12345678901",
+        "data_nascimento": "11-11-1111",
+        "senha": "123",
+        "endereco": {
+            "logradouro": "Avenida senador atillio fontana",
+            "bairro": "Jardim Panorma",
+            "numero": "123"
+        }
+    }
+]
