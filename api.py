@@ -10,16 +10,20 @@ app.json.sort_keys = False
 def carregar(arquivo):
     with open(arquivo, 'r', encoding='utf-8') as f:
         return json.load(f)
+    
 def salvar(arquivo, dados):
     with open(arquivo, 'w', encoding='utf-8') as f:
         json.dump(dados, f, indent=4, ensure_ascii=False)
+        
 def proximo_id(lista, campo_id):
     if not lista:
         return 1
     return max(item[campo_id] for item in lista) +1
+
 @app.get("/")
 def rodando():
     return "Rodando", 200
+
 def agora():
         return datetime.now().strftime("%d/%m/%y %H:%M:%S")
 
@@ -63,6 +67,7 @@ def criarUsuario():
     usuarios.append(resposta)
     salvar('usuarios.json', usuarios)
     return jsonify({"mensagem": f"criado com sucesso id: {resposta.get('id')} nome: {resposta.get('nome')}"}), 201
+
 @app.get('/listar/usuario/<int:id>')
 def listarUsuario(id): 
     usuarios = carregar('usuarios.json')
@@ -74,7 +79,7 @@ def listarUsuario(id):
 @app.get('/listar/historicos')
 def listarHistoricos():
     historicos = carregar('historicos.json')
-    return jsonify(historicos)
+    return jsonify(historicos),200
 
 @app.get("/listar/historico/<int:id>")
 def listarHistorico(id):
@@ -104,6 +109,7 @@ def criarHistorico():
             return jsonify({"erro": f"{campo} é obrigatorio"}), 400
         if valor not in campos_validos:
             return jsonify({"erro": f"{campo} apenas recebe {campos_validos}"}), 422
+        
     for campo, tipo, obrigatorio in campos:
         valor = dados.get(campo)
         if obrigatorio and (campo not in dados or valor == ""):
@@ -120,6 +126,7 @@ def criarHistorico():
         'metodo': dados.get('metodo'),
         'data': agora()
     }
+    
     historicos.append(resposta)
     salvar('historicos.json', historicos)
     return jsonify({"mensagem": "criado com sucesso"}), 201
@@ -136,6 +143,7 @@ def updateUser(id):
                 ('cpf', str,),
                 ('biometria', str)
                 ]
+            
             for campo, tipo in campos:
                 valor = dados.get(campo)
                 if campo in dados and not isinstance(valor, tipo):
