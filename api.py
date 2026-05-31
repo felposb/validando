@@ -56,7 +56,7 @@ def criarUsuario():
         'nome': dados.get('nome'),
         'data_nascimento': dados.get('data_nascimento'),
         'cpf': dados.get('cpf'),
-        'biometria': dados.get('biometria')
+        'digital': {"biometria": dados.get('biometria'), "img_biometria": dados.get('img_biometria')}
     }
     usuarios.append(resposta)
     salvar('usuarios.json', usuarios)

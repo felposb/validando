@@ -1,23 +1,12 @@
 [
     {
-        "id": 1,
-        "nome": "Felipe lima",
-        "data_nascimento": "2008-10-10",
-        "cpf": "13969433908",
-        "biometria": "AZ321BD"
-    },
-    {
-        "id": 1,
-        "nome": "Felipe limaaa",
-        "data_nascimento": "2008-10-10",
-        "cpf": "139694338308",
-        "biometria": "AZ321dBD"
-    },
-    {
-        "id": 1,
+        "id": null,
         "nome": "Valdemar Borges",
         "data_nascimento": "18-11-1978",
         "cpf": "55410493493",
-        "biometria": "fdaifhaqio48327r8dsfhj"
+        "digital": {
+            "biometria": "fdaifhaqio48327r8dsfhj",
+            "img_biometria": null
+        }
     }
 ]
