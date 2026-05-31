@@ -14,8 +14,8 @@ def salvar(arquivo, dados):
         json.dump(dados, f, indent=4, ensure_ascii=False)
 def proximo_id(lista):
     if not lista:
-        return None
-    else:
+        return 1
+    if len(lista) > 0:
         return  lista[-1]['id'] + 1
 @app.get("/")
 def rodando():
