@@ -7,13 +7,10 @@ app = Flask(__name__)
 CORS(app)
 CAMINHO_CLIENTES = 'dados/clientes.json'
 CAMINHO_USUARIOS = 'dados/usuarios.json'
-def proximo_id(lista, campo_id):
-    maior = 0
-    for item in lista:
-        id_atual = item.get(campo_id, 0)
-        if isinstance(id_atual, int) and id_atual > maior:
-            maior = id_atual
-    return maior + 1
+def proximo_id(lista):
+    if not lista:
+        return 1
+    return max(item['id'] for item in lista) + 1
 def carregar(arquivo):
     with open(arquivo, 'r', encoding='utf-8') as f:
         return json.load(f)
@@ -25,7 +22,14 @@ def salvar(arquivo, dados):
 def horario():
     return datetime.now().strftime("%d/%m/%y %H:%M:%S")
 
-
+def validar(dados, campos):
+    for campo, tipo, obrigatorio in campos:
+        valor = dados.get(campo)
+        if obrigatorio and(campo not in dados or valor == ""):
+            return jsonify({'erro': f"{campo} é obrigatório"}),400
+        if campo in dados and not isinstance(valor, tipo):
+            return jsonify({"erro": f"{campo} apenas recebe {tipo.__name__}"}),422
+    return None
 @app.get('/usuarios')
 def getAllUsers():
     usuarios = carregar(CAMINHO_USUARIOS)
@@ -44,9 +48,8 @@ def getUserById(id):
 def getClientes():
     clientes = carregar(CAMINHO_CLIENTES)
     return jsonify(clientes),200
-@app.get('/listar/cliente/<id>')
-def getClienteById(id):
-    id = int(id)
+@app.get('/listar/clientes/<int:id>')
+def getClientesById(id):
     clientes = carregar(CAMINHO_CLIENTES)
     for cliente in clientes:
         mesmo_id = cliente.get('id') == id
@@ -69,6 +72,7 @@ def createNewUser():
         if usuario.get('cpf') == dados.get('cpf'):
             return jsonify({"erro": "Já existe um cadastro neste cpf"}),422
         
+        
     for campo, tipo, obrigatorio in campos:
         valor = dados.get(campo)
         if obrigatorio and(campo not in dados or valor == ""):
@@ -77,7 +81,7 @@ def createNewUser():
             return jsonify({"erro": f"{campo} precisa ser{tipo.__name__}"}), 422
         
     resposta = {
-        'id_usuario': proximo_id(usuarios, 'id_usuario'),
+        'id': proximo_id(usuarios),
         'nome': dados.get('nome'),
         'cpf': dados.get('cpf'),
         'data_nascimento': dados.get('data_nascimento'),
@@ -101,16 +105,13 @@ def dataClientes():
         mesma_digital = cliente.get('digital') == dados.get('digital')
         if mesmo_cpf or mesma_digital:
             return jsonify({'erro': "cliente ja esta cadastrado"}), 422
-    for campo, tipo, obrigatorio in campos:
-        valor = dados.get(campo)
-        if obrigatorio and(campo not in dados or valor == ""):
-            return jsonify({'erro': f"{campo} é obrigatório"}),400
-        if campo in dados and not isinstance(valor, tipo):
-            return jsonify({"erro": f"{campo} apenas recebe {tipo.__name__}"}),422
+    erro = validar(dados, campos)
+    if erro:
+        return erro
     if dados.get('cpf') == 0 and dados.get('cpf') > 11:
         return jsonify({"erro" f"cpf esta inválido"}), 422
     resposta = {
-        'id_cliente': proximo_id(cliente, 'id_clientes'),
+        'id': proximo_id(clientes),
         'data_nascimento': dados.get('data_nascimento'),
         'cpf': dados.get('cpf'),
         'digital': dados.get('digital')
